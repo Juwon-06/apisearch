@@ -27,6 +27,7 @@
 		<input type="checkbox" id="sf" name="level" value="sf"> Semi Final
 		<input type="checkbox" id="f" name="level" value="f"> Final
 	</form>
+	<input id="result" placeholder = "Result" type = "text" value = "" disabled = true><br/>
 	<OwO id="teams"></OwO>
 	<button onclick = "teamPrint()">Get Teams OwO</button>
 	<!-- <style>
@@ -199,7 +200,8 @@
 		const teamsList = document.getElementById("teams");
 		document.getElementById("teams").innerHTML = "";
 		const teamInfo = document.createElement("p");
-		teamInfo.innerHTML = teamKey + " - " + teamNick;
+		document.getElementById("result").value = teamKey + "-" + teamNick;
+		//teamInfo.innerHTML = teamKey + " - " + teamNick;
 		teamsList.appendChild(teamInfo);
 	}
 	</script>
