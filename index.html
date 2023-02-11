@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, maximum-scale=1.0">
+    <title>TBA Api UwU</title>
+</head>
+<body>
+	<h1>Teams OwOd</h1>	
+	<input id="eventcode" placeholder = "Event Code ex)2022cala" type = "text" value = "" oninput="eventcode = this.value"><br/>
+	<input id="match" placeholder = "Match #" type = "text" value = "" oninput="match = this.value"><br/>
+	<form>
+		<label for="robot">Robot:</label>
+		<input type="checkbox" id="r1" name="robot" value="Red 1"> Red 1
+		<input type="checkbox" id="r2" name="robot" value="Red 2"> Red 2
+		<input type="checkbox" id="r3" name="robot" value="Red 3"> Red 3
+		<input type="checkbox" id="b1" name="robot" value="Blue 1"> Blue 1
+		<input type="checkbox" id="b2" name="robot" value="Blue 2"> Blue 2
+		<input type="checkbox" id="b3" name="robot" value="Blue 3"> Blue 3
+	</form>
+	<form>
+		<!-- should update or add double elimination since it's starting to be used in 2023 -->
+		<!-- and the data have both match_number and set_number in both playoff, which is kind of tired to write code OwOb-->
+		<!-- which means playoff is not working yet in both before/after 2023-->
+		<label for="level">Match Level:</label>
+		<input type="checkbox" id="qm" name="level" value="qm"> Quals
+		<input type="checkbox" id="qf" name="level" value="qf"> Quarter Final
+		<input type="checkbox" id="sf" name="level" value="sf"> Semi Final
+		<input type="checkbox" id="f" name="level" value="f"> Final
+	</form>
+	<OwO id="teams"></OwO>
+	<button onclick = "teamPrint()">Get Teams OwO</button>
+	<!-- <style>
+		h1 {
+			position: absolute;
+		 	top: 10px;
+		 	left: 20px;
+		}
+		button {
+		  	position: absolute;
+		  	top: 80px;
+		  	left: 200px;
+		}	
+		OwO {
+			position:absolute;
+		  	top: 120px;
+		  	left: 20px;
+		}
+		</style> -->
+  <script>
+	/********************************************************
+	*Allow only one option of checkbox
+	********************************************************/
+	const checkboxrb = document.querySelectorAll('input[type="checkbox"][name="robot"]');
+
+	for (const checkbox of checkboxrb) {
+	checkbox.addEventListener('change', (event) => {
+		for (const otherCheckbox of checkboxrb) {
+		if (otherCheckbox !== event.target) {
+			otherCheckbox.checked = false;
+		}
+		}
+	});
+	}
+
+	const checkboxlv = document.querySelectorAll('input[type="checkbox"][name="level"]');
+
+	for (const checkbox of checkboxlv) {
+	checkbox.addEventListener('change', (event) => {
+		for (const otherCheckbox of checkboxlv) {
+		if (otherCheckbox !== event.target) {
+			otherCheckbox.checked = false;
+		}
+		}
+	});
+	}
+
+	
+
+	/********************************************************
+	*Get data from checkbox
+	********************************************************/
+	let allyColor;
+	let teamPos;
+	let checkrb;
+	for (const checkbox of checkboxrb) {
+	checkbox.addEventListener('change', (event) => {
+		checkrb = checkbox.id;
+		if(checkrb == 'r1' || checkrb == 'r2' || checkrb == 'r3')
+		{
+			allyColor = 'red'
+			//console.log(allyColor);//debug
+		} else if(checkrb == 'b1' || checkrb == 'b2' || checkrb == 'b3')
+		{
+			allyColor = 'blue'
+			//console.log(allyColor);//debug
+		}
+
+		if(checkrb == 'r1' || checkrb == 'b1')
+		{
+			teamPos = 0;
+			//console.log(teamPos);//debug
+		} else if(checkrb == 'r2' || checkrb == 'b2')
+		{
+			teamPos = 1;
+			//console.log(teamPos);//debug
+		} else if(checkrb == 'r3' || checkrb == 'b3')
+		{
+			teamPos = 2;
+			//console.log(teamPos);//debug
+		} 
+		
+		});
+	}
+
+	let checklv;
+	for (const checkbox of checkboxlv) {
+	checkbox.addEventListener('change', (event) => {
+		checklv = checkbox.id;
+		//console.log(checklv);//debug
+		});
+	}
+
+
+	
+
+	/********************************************************
+	*API request
+	********************************************************/
+	let eventcode = document.getElementById("eventcode").value;
+	let match = document.getElementById("match").value;
+	let teamKey;
+	let teamNick;
+	//let robot = document.getElementById("robot").value;
+	function getTeamNum() 
+	{
+		fetch('https://www.thebluealliance.com/api/v3/event/'+ eventcode + '/matches/simple', {
+			method: "GET",
+			headers: {
+				'X-TBA-Auth-Key': '0iSKwn3ykkgDT9ToHqwBizSiiaa44pyLIK85oEdgOkzxNJS1X0vBtDFrJ24PiAWW'
+			}
+		})
+		.then(response => response.json())
+		.then(data => {
+			// for(var i = 0; i < data.length; i++)
+			// {
+			// 	console.log('adf');
+			// }
+			
+
+
+			const teamsList = document.getElementById("teams");
+			document.getElementById("teams").innerHTML = "";
+			data.forEach(data => {
+			//console.log(data.comp_level)//debug
+			if(data.comp_level == checklv && data.match_number == match)
+			{
+				teamKey = data.alliances[allyColor]['team_keys'][teamPos];
+				//console.log(teamKey)//debug
+			}
+			});
+		})
+		.catch(error => {
+			console.error(error);
+		});
+	}
+
+	
+	function getTeamName() 
+	{
+		fetch('https://www.thebluealliance.com/api/v3/event/'+ eventcode + '/teams/simple', {
+			method: "GET",
+			headers: {
+				'X-TBA-Auth-Key': '0iSKwn3ykkgDT9ToHqwBizSiiaa44pyLIK85oEdgOkzxNJS1X0vBtDFrJ24PiAWW'
+			}
+		})
+		.then(response => response.json())
+		.then(data => {
+			document.getElementById("teams").innerHTML = "";
+			data.forEach(data => {
+			//console.log(data.nickname)//debug
+			if(data.key == teamKey)
+			{
+				teamNick = data.nickname;
+				//console.log(data.comp_level)//debug
+			}
+			});
+		})
+		.catch(error => {
+			console.error(error);
+		});
+	}
+
+	function teamPrint()
+	{
+		getTeamNum();
+		getTeamName();
+
+		
+		const teamsList = document.getElementById("teams");
+		document.getElementById("teams").innerHTML = "";
+		const teamInfo = document.createElement("p");
+		teamInfo.innerHTML = teamKey + " - " + teamNick;
+		teamsList.appendChild(teamInfo);
+	}
+	</script>
+</body>
+</html>

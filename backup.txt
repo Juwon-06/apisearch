@@ -1,0 +1,29 @@
+	let eventcode = document.getElementById("eventcode").value;
+	let match = document.getElementById("match").value;
+	let robot = document.getElementById("robot").value;
+	function getTeams() {
+		fetch('https://www.thebluealliance.com/api/v3/event/'+ eventcode + '/matches/simple', {
+			method: "GET",
+			headers: {
+				'X-TBA-Auth-Key': '0iSKwn3ykkgDT9ToHqwBizSiiaa44pyLIK85oEdgOkzxNJS1X0vBtDFrJ24PiAWW'
+			}
+		})
+		.then(response => response.json())
+		.then(data => {
+			const teamsList = document.getElementById("teams");
+			document.getElementById("teams").innerHTML = "";
+			data.forEach(data => {
+			const teamInfo = document.createElement("li");
+			teamInfo.innerHTML = data + data.alliances['blue']['team_keys'][0] + " - " + data.nickname;
+			teamInfo.innerHTML = data.alliances['blue']['team_keys'][1] + " - " + data.nickname;
+			teamInfo.innerHTML = data.alliances['blue']['team_keys'][2] + " - " + data.nickname;
+			teamInfo.innerHTML = data.alliances['red']['team_keys'][0] + " - " + data.nickname;
+			teamInfo.innerHTML = data.alliances['red']['team_keys'][1] + " - " + data.nickname;
+			teamInfo.innerHTML = data.alliances['red']['team_keys'][2] + " - " + data.nickname;
+			teamsList.appendChild(teamInfo);
+			});
+		})
+		.catch(error => {
+			console.error(error);
+		});
+	}
