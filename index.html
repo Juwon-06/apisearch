@@ -6,16 +6,16 @@
 </head>
 <body>
 	<h1>Teams OwOd</h1>	
-	<input id="eventcode" placeholder = "Event Code ex)2022cala" type = "text" value = "" oninput="eventcode = this.value"><br/>
-	<input id="match" placeholder = "Match #" type = "text" value = "" oninput="match = this.value"><br/>
+	<input id="eventcode" placeholder = "Event Code ex)2022cala" type = "text" value = "" oninput="eventcode = this.value" onchange="teamPrint()"><br/>
+	<input id="match" placeholder = "Match #" type = "text" value = "" oninput="match = this.value" onchange="teamPrint()"><br/>
 	<form>
 		<label for="robot">Robot:</label>
-		<input type="checkbox" id="r1" name="robot" value="Red 1"> Red 1
-		<input type="checkbox" id="r2" name="robot" value="Red 2"> Red 2
-		<input type="checkbox" id="r3" name="robot" value="Red 3"> Red 3
-		<input type="checkbox" id="b1" name="robot" value="Blue 1"> Blue 1
-		<input type="checkbox" id="b2" name="robot" value="Blue 2"> Blue 2
-		<input type="checkbox" id="b3" name="robot" value="Blue 3"> Blue 3
+		<input type="checkbox" id="r1" name="robot" value="Red 1" onchange="teamPrint()"> Red 1
+		<input type="checkbox" id="r2" name="robot" value="Red 2" onchange="teamPrint()"> Red 2
+		<input type="checkbox" id="r3" name="robot" value="Red 3" onchange="teamPrint()"> Red 3
+		<input type="checkbox" id="b1" name="robot" value="Blue 1" onchange="teamPrint()"> Blue 1
+		<input type="checkbox" id="b2" name="robot" value="Blue 2" onchange="teamPrint()"> Blue 2
+		<input type="checkbox" id="b3" name="robot" value="Blue 3" onchange="teamPrint()"> Blue 3
 	</form>
 	<form>
 		<!-- should update or add double elimination since it's starting to be used in 2023 -->
@@ -193,14 +193,23 @@
 
 	function teamPrint()
 	{
-		getTeamNum();
-		getTeamName();
+		for(var i = 0; i < 5; i++)
+		{
+			getTeamNum();
+			getTeamName();
+		}
 
 		
 		const teamsList = document.getElementById("teams");
 		document.getElementById("teams").innerHTML = "";
 		const teamInfo = document.createElement("p");
-		document.getElementById("result").value = teamKey + "-" + teamNick;
+		for(var i = 0; i < 5; i++)
+		{
+			if(teamKey != undefined && teamNick != undefined)
+			{
+				document.getElementById("result").value = teamKey + "-" + teamNick;
+			}
+		}
 		//teamInfo.innerHTML = teamKey + " - " + teamNick;
 		teamsList.appendChild(teamInfo);
 	}
